@@ -34,19 +34,16 @@ public class EscalonamentoProcessos {
         Iterator<Processo> it = processos.iterator();
     
         while (!prontos.isEmpty() || it.hasNext()) {
-            // Adiciona processos que chegaram até o tempoAtual na lista prontos
             while (it.hasNext()) {
                 Processo proximo = it.next();
                 if (proximo.tempoChegada <= tempoAtual) {
                     prontos.add(proximo);
                 } else {
-                    // Se o próximo processo ainda não chegou, devolva o iterador para não perder processos
                     it = processos.listIterator(processos.indexOf(proximo));
                     break;
                 }
             }
     
-            // Ordena os processos prontos pelo tempo de serviço (SJF)
             prontos.sort(Comparator.comparingInt(p -> p.tempoServico));
             
             if (!prontos.isEmpty()) {
@@ -56,7 +53,7 @@ public class EscalonamentoProcessos {
                 p.tempoFim = tempoAtual;
                 p.calcularTempoEsperaRetorno();
             } else {
-                tempoAtual++;  // Incrementa o tempo se não há processos prontos para executar
+                tempoAtual++; 
             }
         }
     }    
@@ -149,10 +146,9 @@ public class EscalonamentoProcessos {
     }
 
     public static void main(String[] args) {
-        int n = 5; // Número de processos
+        int n = 5;
         List<Processo> processosOriginais = gerarProcessos(n);
-    
-        // Executando o algoritmo FIFO
+
         List<Processo> processosFIFO = new ArrayList<>();
         for (Processo p : processosOriginais) {
             processosFIFO.add(new Processo(p.id, p.tempoChegada, p.tempoServico, p.prioridade));
@@ -160,7 +156,6 @@ public class EscalonamentoProcessos {
         fifo(processosFIFO);
         imprimirResultados(processosFIFO, "FIFO");
     
-        // Executando o algoritmo SJF
         List<Processo> processosSJF = new ArrayList<>();
         for (Processo p : processosOriginais) {
             processosSJF.add(new Processo(p.id, p.tempoChegada, p.tempoServico, p.prioridade));
@@ -168,7 +163,6 @@ public class EscalonamentoProcessos {
         sjf(processosSJF);
         imprimirResultados(processosSJF, "SJF");
     
-        // Executando o algoritmo Round Robin com quantum 4
         List<Processo> processosRR = new ArrayList<>();
         for (Processo p : processosOriginais) {
             processosRR.add(new Processo(p.id, p.tempoChegada, p.tempoServico, p.prioridade));
@@ -177,15 +171,13 @@ public class EscalonamentoProcessos {
         imprimirResultados(processosRR, "Round Robin");
         System.out.println("Tempo de ociosidade do processador: " + ociosidadeRR);
     
-        // Executando o algoritmo de Prioridade
         List<Processo> processosPrioridade = new ArrayList<>();
         for (Processo p : processosOriginais) {
             processosPrioridade.add(new Processo(p.id, p.tempoChegada, p.tempoServico, p.prioridade));
         }
         prioridade(processosPrioridade);
         imprimirResultados(processosPrioridade, "Prioridade");
-    
-        // Executando o algoritmo Loteria
+
         List<Processo> processosLoteria = new ArrayList<>();
         for (Processo p : processosOriginais) {
             processosLoteria.add(new Processo(p.id, p.tempoChegada, p.tempoServico, p.prioridade));
